@@ -1,0 +1,12 @@
+{
+  "name": "skymga-apps",
+  "private": true,
+  "scripts": {
+    "dev:invitational": "pnpm --filter @skymga/invitational dev",
+    "dev:admin": "pnpm --filter @skymga/admin dev",
+    "build:invitational": "pnpm --filter @skymga/invitational build",
+    "build:admin": "pnpm --filter @skymga/admin build",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint"
+  }
+}

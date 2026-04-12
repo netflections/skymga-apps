@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sky-50: #f0f7ff;
+  --color-sky-100: #e0efff;
+  --color-sky-200: #b9dfff;
+  --color-sky-300: #7cc5ff;
+  --color-sky-400: #4B8DCC;
+  --color-sky-500: #3a7ab8;
+  --color-sky-600: #2d6699;
+  --color-sky-700: #1E3851;
+  --color-sky-800: #1a3048;
+  --color-sky-900: #15263a;
+  --color-sky-950: #0d1824;
+
+  --font-sans: "Source Sans 3", system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
