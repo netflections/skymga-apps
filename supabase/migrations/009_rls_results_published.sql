@@ -1,5 +1,8 @@
+-- Add auth_uid to members (required by the RLS policy below)
+alter table members
+  add column if not exists auth_uid uuid unique;
+
 -- RLS policy: anon users can read lottery_results only for published tournaments
--- (replaces the plan's "status = complete" check with the explicit results_published flag)
 create policy "lottery_results_published_read"
   on lottery_results for select
   to anon, authenticated
