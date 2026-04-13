@@ -23,7 +23,7 @@ function DatetimeInput({ label, value, onChange, error, hint, className = '' }) 
         className={`block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 ${error ? 'border-red-500' : 'border-gray-300'}`}
       />
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-      {hint && !error && <p className="mt-1 text-xs text-gray-400">{hint}</p>}
+      {hint && !error && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
     </div>
   )
 }
@@ -40,7 +40,7 @@ function NumberInput({ label, value, onChange, error, min = 1, hint }) {
         className={`block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 ${error ? 'border-red-500' : 'border-gray-300'}`}
       />
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-      {hint && !error && <p className="mt-1 text-xs text-gray-400">{hint}</p>}
+      {hint && !error && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
     </div>
   )
 }
@@ -191,7 +191,7 @@ export default function TournamentForm({ tournament, onSave, isNew }) {
       <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm space-y-4">
         <div>
           <h3 className="font-semibold text-gray-800">Registration Window</h3>
-          <p className="text-xs text-gray-400 mt-0.5">All times in {form.timezone}</p>
+          <p className="text-xs text-gray-500 mt-0.5">All times in {form.timezone}</p>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -234,7 +234,7 @@ export default function TournamentForm({ tournament, onSave, isNew }) {
       <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm space-y-4">
         <div>
           <h3 className="font-semibold text-gray-800">Acceptance Windows</h3>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className="text-xs text-gray-500 mt-0.5">
             How long selected members have to confirm and pay. Reminder email/SMS timing
             (e.g. 48 hours before deadline) is configured per tier in the Tiers tab.
           </p>

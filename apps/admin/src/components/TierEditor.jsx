@@ -316,7 +316,7 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
             placeholder={isWaitlist ? '∞' : 'Spots'}
             className="block w-full rounded border border-gray-300 px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400"
           />
-          <p className="text-xs text-gray-400 text-center mt-0.5">{isWaitlist ? 'unlimited' : 'spots'}</p>
+          <p className="text-xs text-gray-500 text-center mt-0.5">{isWaitlist ? 'unlimited' : 'spots'}</p>
         </div>
 
         {/* Min Years — seniority only */}
@@ -330,7 +330,7 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
             placeholder={isSeniority ? 'Min yrs' : '—'}
             className="block w-full rounded border border-gray-300 px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400"
           />
-          <p className="text-xs text-gray-400 text-center mt-0.5">min yrs</p>
+          <p className="text-xs text-gray-500 text-center mt-0.5">min yrs</p>
         </div>
 
         {/* Draw Date */}
@@ -342,7 +342,7 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
             disabled={isWaitlist}
             className="block w-full rounded border border-gray-300 px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400"
           />
-          <p className="text-xs text-gray-400 mt-0.5">draw date</p>
+          <p className="text-xs text-gray-500 mt-0.5">draw date</p>
         </div>
 
         {/* Acceptance Deadline */}
@@ -354,7 +354,7 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
             disabled={isWaitlist}
             className="block w-full rounded border border-gray-300 px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400"
           />
-          <p className="text-xs text-gray-400 mt-0.5">acceptance deadline</p>
+          <p className="text-xs text-gray-500 mt-0.5">acceptance deadline</p>
         </div>
 
         {/* Reminder hours */}
@@ -366,7 +366,7 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
             onChange={e => onUpdate('reminder_hours_before_deadline', e.target.value)}
             className="block w-full rounded border border-gray-300 px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-1 focus:ring-sky-500"
           />
-          <p className="text-xs text-gray-400 text-center mt-0.5 whitespace-nowrap">reminder hrs</p>
+          <p className="text-xs text-gray-500 text-center mt-0.5 whitespace-nowrap">reminder hrs</p>
         </div>
 
         {/* Delete */}
