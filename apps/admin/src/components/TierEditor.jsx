@@ -57,6 +57,7 @@ export default function TierEditor({ tournamentId, tournament }) {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [savedMsg, setSavedMsg] = useState('')
+  const [invalidKeys, setInvalidKeys] = useState(new Set())
 
   async function fetchTiers() {
     const { data } = await supabase
@@ -117,6 +118,11 @@ export default function TierEditor({ tournamentId, tournament }) {
     setTiers(prev => {
       const arr = [...prev]
       arr[idx] = { ...arr[idx], [field]: value }
+      // Clear validation highlight when user fills in a field
+      if ((field === 'draw_date_local' || field === 'acceptance_deadline_local') && value) {
+        const key = arr[idx]._key
+        setInvalidKeys(prev => { const s = new Set(prev); s.delete(key); return s })
+      }
       // Auto-fill acceptance deadline when draw date changes
       if (field === 'draw_date_local') {
         arr[idx].acceptance_deadline_local = calcDeadline(value, arr[idx].type, tournament, tz)
@@ -146,14 +152,15 @@ export default function TierEditor({ tournamentId, tournament }) {
     setSavedMsg('')
 
     // Validate required fields on non-waitlist tiers
-    const missing = tiers
+    const invalidTiers = tiers
       .filter(t => t.type !== 'waitlist')
       .filter(t => !t.draw_date_local || !t.acceptance_deadline_local)
-      .map(t => t.name || `Tier ${t.draw_order}`)
-    if (missing.length) {
-      setSaveError(`Draw date and acceptance deadline are required for: ${missing.join(', ')}`)
+    if (invalidTiers.length) {
+      setInvalidKeys(new Set(invalidTiers.map(t => t._key)))
+      setSaveError(`Draw date and acceptance deadline are required for: ${invalidTiers.map(t => t.name || `Tier ${t.draw_order}`).join(', ')}`)
       return
     }
+    setInvalidKeys(new Set())
 
     setSaving(true)
 
@@ -232,6 +239,7 @@ export default function TierEditor({ tournamentId, tournament }) {
               tier={tier}
               idx={idx}
               total={tiers.length}
+              hasError={invalidKeys.has(tier._key)}
               onUpdate={(field, value) => update(idx, field, value)}
               onRemove={() => removeTier(idx)}
               onMoveUp={() => move(idx, -1)}
@@ -257,7 +265,7 @@ export default function TierEditor({ tournamentId, tournament }) {
   )
 }
 
-function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown }) {
+function TierRow({ tier, idx, total, hasError, onUpdate, onRemove, onMoveUp, onMoveDown }) {
   const isWaitlist = tier.type === 'waitlist'
   const isSeniority = tier.type === 'seniority'
 
@@ -340,9 +348,9 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
             value={tier.draw_date_local}
             onChange={e => onUpdate('draw_date_local', e.target.value)}
             disabled={isWaitlist}
-            className="block w-full rounded border border-gray-300 px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400"
+            className={`block w-full rounded border px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400 ${hasError && !tier.draw_date_local ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
           />
-          <p className="text-xs text-gray-500 mt-0.5">draw date</p>
+          <p className={`text-xs mt-0.5 ${hasError && !tier.draw_date_local ? 'text-red-500' : 'text-gray-500'}`}>draw date</p>
         </div>
 
         {/* Acceptance Deadline */}
@@ -352,9 +360,9 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
             value={tier.acceptance_deadline_local}
             onChange={e => onUpdate('acceptance_deadline_local', e.target.value)}
             disabled={isWaitlist}
-            className="block w-full rounded border border-gray-300 px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400"
+            className={`block w-full rounded border px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400 ${hasError && !tier.acceptance_deadline_local ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
           />
-          <p className="text-xs text-gray-500 mt-0.5">acceptance deadline</p>
+          <p className={`text-xs mt-0.5 ${hasError && !tier.acceptance_deadline_local ? 'text-red-500' : 'text-gray-500'}`}>acceptance deadline</p>
         </div>
 
         {/* Reminder hours */}
