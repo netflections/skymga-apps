@@ -4,8 +4,7 @@ create table tiers (
   name text not null,
   type text not null
     check (type in ('flight_winners', 'seniority', 'general', 'waitlist')),
-  min_years int,
-  max_years int,
+  min_years int,          -- seniority tiers only: cumulative threshold (e.g. 15 = "15+ years")
   allocated_spots int not null,
   registration_deadline timestamptz not null,
   draw_date timestamptz not null,
