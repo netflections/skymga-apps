@@ -142,9 +142,20 @@ export default function TierEditor({ tournamentId, tournament }) {
   )
 
   async function saveTiers() {
-    setSaving(true)
     setSaveError('')
     setSavedMsg('')
+
+    // Validate required fields on non-waitlist tiers
+    const missing = tiers
+      .filter(t => t.type !== 'waitlist')
+      .filter(t => !t.draw_date_local || !t.acceptance_deadline_local)
+      .map(t => t.name || `Tier ${t.draw_order}`)
+    if (missing.length) {
+      setSaveError(`Draw date and acceptance deadline are required for: ${missing.join(', ')}`)
+      return
+    }
+
+    setSaving(true)
 
     // Wipe and re-insert — simplest correct approach
     const { error: delErr } = await supabase
