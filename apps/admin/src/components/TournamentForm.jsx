@@ -194,16 +194,37 @@ export default function TournamentForm({ tournament, onSave, isNew }) {
           <p className="text-xs text-gray-400 mt-0.5">All times in {form.timezone}</p>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <DatetimeInput
-            label="Registration Opens"
-            value={form.registration_opens_at}
-            onChange={v => set('registration_opens_at', v)}
-            error={errors.registration_opens_at}
-          />
+          <div>
+            <DatetimeInput
+              label="Registration Opens"
+              value={form.registration_opens_at}
+              onChange={v => {
+                set('registration_opens_at', v)
+                // Re-evaluate deadline ordering live
+                if (form.registration_deadline && v && v >= form.registration_deadline) {
+                  setErrors(e => ({ ...e, registration_deadline: 'Must be after registration opens' }))
+                } else {
+                  setErrors(e => ({ ...e, registration_deadline: '' }))
+                }
+              }}
+              error={errors.registration_opens_at}
+            />
+            {form.registration_opens_at && new Date(form.registration_opens_at) < new Date() && (
+              <p className="mt-1 text-xs text-amber-600">
+                This date is in the past — members can register immediately once you open registration.
+              </p>
+            )}
+          </div>
           <DatetimeInput
             label="Registration Deadline"
             value={form.registration_deadline}
-            onChange={v => set('registration_deadline', v)}
+            onChange={v => {
+              set('registration_deadline', v)
+              // Validate ordering live
+              if (form.registration_opens_at && v && form.registration_opens_at >= v) {
+                setErrors(e => ({ ...e, registration_deadline: 'Must be after registration opens' }))
+              }
+            }}
             error={errors.registration_deadline}
           />
         </div>
