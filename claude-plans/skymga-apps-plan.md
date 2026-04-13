@@ -667,39 +667,50 @@ Every request to `/accept/<token>` runs the following checks in order:
 ### Phase 1 — Foundation ✅ Complete
 - ✅ Initialize monorepo with pnpm workspaces
 - ✅ Scaffold `apps/invitational`, `apps/admin`, `packages/ui`, `packages/supabase`, `packages/utils`
-- ✅ Database migration files written (all 7 tables in `supabase/migrations/`)
+- ✅ Database migration files written (`supabase/migrations/` — 012 migrations total)
 - ✅ Shared UI components: Button, Input, Card, Badge, Modal, Navbar (`packages/ui/src/`)
 - ✅ Supabase client initialized (`packages/supabase/src/index.js`)
 - ✅ Utils: GHIN validation, tenure calc, seniority tier validation (`packages/utils/src/index.js`)
-- ⏳ Supabase project creation + schema migration push — not yet run (needs credentials)
-- ⏳ Vercel projects + Cloudflare DNS — not yet configured
+- ✅ Supabase project linked and all migrations pushed to live project (`ldbevniddynjohdbnnkh`)
+- ✅ MGA logo favicon in both app `public/` directories
+- ✅ Tailwind `@source` directive added so shared UI package classes are scanned
+- ⏳ Vercel projects configured but Cloudflare DNS still needs CNAME records for subdomains
 - ⏳ Logo assets copy to `packages/ui/assets/` — not yet done
 
 ### Pre-build Setup (External Services)
 - ✅ Twilio toll-free number purchased (`(888) 603-9799`)
 - ✅ Twilio toll-free verification submitted (2026-04-12) — approval pending, allow 1–3 weeks
-- ⏳ PayPal Business account + credentials — not yet configured
-- ⏳ Resend API key + `admin@skymga.org` sender domain — not yet configured
+- ⏳ PayPal Business account + credentials — not yet configured in Vercel env vars
+- ⏳ Resend API key + `admin@skymga.org` sender domain — not yet configured in Vercel env vars
+- ⏳ Edge Functions not yet deployed (`supabase functions deploy` not yet run)
 
 ### Phase 2 — Admin Core ✅ Complete
-- ✅ Admin auth (email/password via Supabase)
-- ✅ Member roster UI: view, search, add, edit, deactivate
+- ✅ Admin auth (email/password via Supabase); admin account created at `admin@skymga.org`
+- ✅ Member roster UI: view, search, add, edit, deactivate — tested and working
 - ✅ XLSX import mapped to member schema; phone auto-normalized to E.164; bad rows flagged
 - ✅ Tournament builder: all fields, timezone, timing windows, confirmation CC email
+  - Year defaults to current year; flight winner exclusive window field removed
+  - Past-date warning on Registration Opens; live ordering validation on Registration Deadline
+  - Success banner + scroll-to-top on tournament creation
 - ✅ Tier configuration: draw date auto-calculates acceptance deadline; timezone-aware datetime fields
+  - Required field validation with per-field red highlighting
+  - Ordering validation: draw date > registration deadline; acceptance deadline > draw date
+  - reminder hrs label no longer wraps
 - ✅ Seniority tier validation UI (uniqueness and descending draw order enforcement)
 - ✅ Prior year flight winner entry (FlightWinnerEditor tab)
+- ⏳ Flight Winners tab — not yet tested end-to-end
+- ⏳ Draw Console — not yet tested end-to-end
 
-### Phase 3 — Registration ✅ Complete
+### Phase 3 — Registration ✅ Complete (code); ⏳ not yet tested end-to-end
 - ✅ Magic link auth flow for members
 - ✅ Registration portal with eligibility checking (all 8 states)
 - ✅ Guest information form with validation (GHIN, phone)
 - ✅ Registration deadline enforcement
 - ✅ Confirmation email via Edge Function + Resend
-- ✅ Twilio toll-free number purchased and verification submitted 2026-04-12 — SMS blocked until approved
-- ⏳ PayPal Business account + credentials — not yet configured
+- ⏳ Requires Resend configured + Edge Functions deployed to test
+- ⏳ Twilio SMS blocked until toll-free verification approved
 
-### Phase 4 — Lottery Engine + Acceptance ✅ Complete
+### Phase 4 — Lottery Engine + Acceptance ✅ Complete (code); ⏳ not yet tested end-to-end
 - ✅ Spillover calculation logic
 - ✅ Fisher-Yates random draw algorithm per tier (Supabase Edge Function `run-draw`)
 - ✅ Flight winner status tracking and spot reversion
@@ -710,18 +721,29 @@ Every request to `/accept/<token>` runs the following checks in order:
 - ✅ PayPal webhook handler
 - ✅ Vercel cron jobs: reminder (email + SMS) and expiry + sequential waitlist promotion
 - ✅ Waitlist promotion on admin-triggered withdrawal
+- ⏳ Requires PayPal + Resend + Edge Functions deployed to test
 
-### Phase 5 — Public Results + Polish ✅ Complete
+### Phase 5 — Public Results + Polish ✅ Complete (code); ⏳ not yet tested end-to-end
 - ✅ Public results pages (`/results`, `/results/:year`) — no auth required
 - ✅ Member history view (`/history`) — authenticated
 - ✅ FlightWinnerEditor tab wired up in admin TournamentDetail
-- ✅ "Publish Results" button in DrawConsole (+ Unpublish)
+- ✅ "Publish Results" / "Unpublish" button in DrawConsole
 - ✅ Expiry notification email in `expire-acceptances.js` cron
 - ✅ Link from skymga.org navbar to invitational.skymga.org
 - ✅ Results + History nav links in invitational Layout
-- ✅ Migration `008_results_published.sql` + `009_rls_results_published.sql`
-- ⏳ Mobile-responsive styling review — basic TW responsive classes used throughout; deep audit pending
-- ⏳ End-to-end testing with dummy data — needs live Supabase project
+- ✅ Help/hint text darkened to gray-500 across admin forms
+- ⏳ Mobile-responsive styling review — basic TW responsive classes used; deep audit pending
+- ⏳ End-to-end testing pending external services setup
+
+### Phase 6 — Pre-Launch Checklist ⏳ Not started
+- ⏳ Deploy Edge Functions: `supabase functions deploy` (all 7 functions)
+- ⏳ Set Vercel env vars: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `PAYPAL_CLIENT_ID`, `PAYPAL_SECRET`, `PAYPAL_WEBHOOK_ID`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `CRON_SECRET`, `INVITATIONAL_URL`
+- ⏳ Set Supabase Edge Function secrets (same vars, via `supabase secrets set`)
+- ⏳ Configure Resend: verify `skymga.org` sender domain, create API key
+- ⏳ Configure PayPal: create app, get client ID + secret, register webhook URL
+- ⏳ Add Cloudflare CNAME records for `invitational.skymga.org` and `admin.skymga.org`
+- ⏳ Import full member roster via XLSX import in admin portal
+- ⏳ End-to-end smoke test: member login → register → draw → accept → confirm
 
 ---
 
