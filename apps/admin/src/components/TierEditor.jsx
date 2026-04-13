@@ -323,7 +323,7 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
         </div>
 
         {/* Draw Date */}
-        <div className="shrink-0 w-44">
+        <div className="shrink-0 w-40">
           <input
             type="datetime-local"
             value={tier.draw_date_local}
@@ -335,7 +335,7 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
         </div>
 
         {/* Acceptance Deadline */}
-        <div className="shrink-0 w-44">
+        <div className="shrink-0 w-40">
           <input
             type="datetime-local"
             value={tier.acceptance_deadline_local}
@@ -347,7 +347,7 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
         </div>
 
         {/* Reminder hours */}
-        <div className="shrink-0 w-16">
+        <div className="shrink-0 w-20">
           <input
             type="number"
             min="1"
@@ -355,7 +355,7 @@ function TierRow({ tier, idx, total, onUpdate, onRemove, onMoveUp, onMoveDown })
             onChange={e => onUpdate('reminder_hours_before_deadline', e.target.value)}
             className="block w-full rounded border border-gray-300 px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-1 focus:ring-sky-500"
           />
-          <p className="text-xs text-gray-400 text-center mt-0.5">reminder hrs</p>
+          <p className="text-xs text-gray-400 text-center mt-0.5 whitespace-nowrap">reminder hrs</p>
         </div>
 
         {/* Delete */}
