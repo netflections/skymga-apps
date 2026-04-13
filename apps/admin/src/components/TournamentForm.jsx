@@ -50,14 +50,13 @@ export default function TournamentForm({ tournament, onSave, isNew }) {
 
   const [form, setForm] = useState({
     name: tournament?.name ?? '',
-    year: tournament?.year ?? new Date().getFullYear() + 1,
+    year: tournament?.year ?? new Date().getFullYear(),
     description: tournament?.description ?? '',
     deposit_amount: tournament?.deposit_amount ?? 0,
     timezone: tz,
     confirmation_cc_email: tournament?.confirmation_cc_email ?? '',
     registration_opens_at: utcToLocal(tournament?.registration_opens_at, tz),
     registration_deadline: utcToLocal(tournament?.registration_deadline, tz),
-    flight_winner_registration_deadline: utcToLocal(tournament?.flight_winner_registration_deadline, tz),
     seniority_acceptance_days: tournament?.seniority_acceptance_days ?? 7,
     general_acceptance_days: tournament?.general_acceptance_days ?? 7,
     waitlist_acceptance_hours: tournament?.waitlist_acceptance_hours ?? 24,
@@ -82,9 +81,6 @@ export default function TournamentForm({ tournament, onSave, isNew }) {
     if (form.registration_opens_at && form.registration_deadline &&
         form.registration_opens_at >= form.registration_deadline)
       errs.registration_deadline = 'Must be after registration opens'
-    if (form.flight_winner_registration_deadline && form.registration_opens_at &&
-        form.flight_winner_registration_deadline > form.registration_opens_at)
-      errs.flight_winner_registration_deadline = 'Must be on or before registration opens'
     if (parseFloat(form.deposit_amount) < 0) errs.deposit_amount = 'Cannot be negative'
     if (!form.seniority_acceptance_days || parseInt(form.seniority_acceptance_days) < 1)
       errs.seniority_acceptance_days = 'Must be at least 1'
@@ -113,9 +109,6 @@ export default function TournamentForm({ tournament, onSave, isNew }) {
       confirmation_cc_email: form.confirmation_cc_email.trim() || null,
       registration_opens_at: localToUtc(form.registration_opens_at, currentTz),
       registration_deadline: localToUtc(form.registration_deadline, currentTz),
-      flight_winner_registration_deadline: form.flight_winner_registration_deadline
-        ? localToUtc(form.flight_winner_registration_deadline, currentTz)
-        : null,
       seniority_acceptance_days: parseInt(form.seniority_acceptance_days),
       general_acceptance_days: parseInt(form.general_acceptance_days),
       waitlist_acceptance_hours: parseInt(form.waitlist_acceptance_hours),
@@ -214,21 +207,16 @@ export default function TournamentForm({ tournament, onSave, isNew }) {
             error={errors.registration_deadline}
           />
         </div>
-        <DatetimeInput
-          label="Flight Winner Exclusive Window Closes (optional)"
-          value={form.flight_winner_registration_deadline}
-          onChange={v => set('flight_winner_registration_deadline', v)}
-          error={errors.flight_winner_registration_deadline}
-          hint="Must be on or before Registration Opens. Only prior year flight winners can register during this window."
-          className="max-w-xs"
-        />
       </section>
 
       {/* Acceptance Windows */}
       <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm space-y-4">
         <div>
           <h3 className="font-semibold text-gray-800">Acceptance Windows</h3>
-          <p className="text-xs text-gray-400 mt-0.5">How long selected members have to confirm and pay.</p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            How long selected members have to confirm and pay. Reminder email/SMS timing
+            (e.g. 48 hours before deadline) is configured per tier in the Tiers tab.
+          </p>
         </div>
         <div className="grid grid-cols-3 gap-4">
           <NumberInput
