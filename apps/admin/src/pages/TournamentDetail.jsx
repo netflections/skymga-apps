@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useEffect, useState, useRef } from 'react'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '@skymga/supabase'
 import { Badge } from '@skymga/ui'
 import TournamentForm from '../components/TournamentForm'
@@ -26,7 +26,9 @@ const TABS = [
 export default function TournamentDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { state: routeState } = useLocation()
   const isNew = id === 'new'
+  const topRef = useRef(null)
 
   const [tournament, setTournament] = useState(null)
   const [loading, setLoading] = useState(!isNew)
@@ -46,6 +48,12 @@ export default function TournamentDetail() {
     if (!isNew) fetchTournament()
   }, [id])
 
+  useEffect(() => {
+    if (routeState?.created) {
+      topRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [routeState])
+
   async function handleSaveSettings(payload) {
     if (isNew) {
       const { data, error } = await supabase
@@ -53,7 +61,7 @@ export default function TournamentDetail() {
         .insert(payload)
         .select()
         .single()
-      if (!error) navigate(`/tournaments/${data.id}`)
+      if (!error) navigate(`/tournaments/${data.id}`, { state: { created: true } })
       return { error }
     } else {
       const { error } = await supabase
@@ -80,7 +88,15 @@ export default function TournamentDetail() {
   const tx = !isNew ? TRANSITIONS[tournament?.status] : null
 
   return (
-    <div>
+    <div ref={topRef}>
+      {/* Created confirmation banner */}
+      {routeState?.created && (
+        <div className="mb-6 rounded-lg bg-green-50 border border-green-200 px-4 py-3 flex items-center gap-2">
+          <span className="text-green-700 text-sm font-medium">Tournament created.</span>
+          <span className="text-green-600 text-sm">Configure tiers below, then open registration when ready.</span>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-6">
         <button
